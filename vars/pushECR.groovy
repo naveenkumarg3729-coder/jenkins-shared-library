@@ -1,9 +1,10 @@
-def call() {
-    sh '''
-    aws ecr get-login-password --region ap-south-2 | docker login --username AWS --password-stdin 641134884964.dkr.ecr.ap-south-2.amazonaws.com
+def call(String imageName, String accountId, String region) {
 
-    docker tag bankapp:latest 641134884964.dkr.ecr.ap-south-2.amazonaws.com/bankapp:latest
+    sh """
+    aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin ${accountId}.dkr.ecr.${region}.amazonaws.com
 
-    docker push 641134884964.dkr.ecr.ap-south-2.amazonaws.com/bankapp:latest
-    '''
+    docker tag ${imageName}:latest ${accountId}.dkr.ecr.${region}.amazonaws.com/${imageName}:latest
+
+    docker push ${accountId}.dkr.ecr.${region}.amazonaws.com/${imageName}:latest
+    """
 }
