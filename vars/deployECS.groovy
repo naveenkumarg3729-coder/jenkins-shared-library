@@ -1,14 +1,9 @@
-def call(String imageName, String accountId, String region) {
+def call(String clusterName, String serviceName) {
 
     sh """
-    aws ecr get-login-password --region ${region} | \
-    docker login --username AWS --password-stdin \
-    ${accountId}.dkr.ecr.${region}.amazonaws.com
-
-    docker tag ${imageName}:latest \
-    ${accountId}.dkr.ecr.${region}.amazonaws.com/${imageName}:latest
-
-    docker push \
-    ${accountId}.dkr.ecr.${region}.amazonaws.com/${imageName}:latest
+    aws ecs update-service \
+      --cluster ${clusterName} \
+      --service ${serviceName} \
+      --force-new-deployment
     """
 }
